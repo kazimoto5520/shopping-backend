@@ -1,11 +1,11 @@
 package onlineshopping.exc;
 
-public class EmailExistException extends RuntimeException{
-    public EmailExistException(String message) {
+public class HandleExceptions extends RuntimeException{
+    public HandleExceptions(String message) {
         super(message);
     }
 
-    public EmailExistException(String message, Throwable cause) {
+    public HandleExceptions(String message, Throwable cause) {
         super(message, cause);
     }
 }
