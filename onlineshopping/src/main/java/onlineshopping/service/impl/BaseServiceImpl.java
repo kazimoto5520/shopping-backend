@@ -5,7 +5,7 @@ import onlineshopping.constants.UserRole;
 import onlineshopping.entity.User;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.model.UserDto;
-import onlineshopping.repo.UserRepository;
+import onlineshopping.repo.UserRepo;
 import onlineshopping.service.base.BaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BaseServiceImpl implements BaseService {
 
-    private final UserRepository userRepository;
+    private final UserRepo userRepository;
     @Override
     public ResponseEntity<String> createAccount(UserDto userDto) {
         try {
