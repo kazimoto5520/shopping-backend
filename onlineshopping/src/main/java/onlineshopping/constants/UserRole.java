@@ -1,4 +1,7 @@
 package onlineshopping.constants;
 
-public class UserRole {
+public enum UserRole {
+    CUSTOMER,
+    ENTREPRENEUR,//sales products
+    ADMIN
 }

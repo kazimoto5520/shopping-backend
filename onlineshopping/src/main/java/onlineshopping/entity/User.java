@@ -2,18 +2,21 @@ package onlineshopping.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import onlineshopping.constants.UserRole;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Users {
+@Builder
+public class User {
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -34,6 +37,9 @@ public class Users {
     private UserRole role;
 
     private LocalDate date_created;// when an account created
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.EAGER)
+    private List<Order> orders;
 
     @PrePersist
     public void onCreate(){

@@ -1,4 +1,4 @@
 package onlineshopping.contoller;
 
-public class UserController {
+public class SearchController {
 }
