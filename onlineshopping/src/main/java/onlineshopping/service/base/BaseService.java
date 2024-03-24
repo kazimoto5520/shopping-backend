@@ -1,10 +1,14 @@
 package onlineshopping.service.base;
 
+import onlineshopping.model.AuthRequest;
+import onlineshopping.model.AuthResponse;
 import onlineshopping.model.UserDto;
 import org.springframework.http.ResponseEntity;
 
 public interface BaseService {
-    ResponseEntity<String> createAccount(UserDto userDto);
+    ResponseEntity<AuthResponse> createAccount(UserDto userDto);
+
+    AuthResponse authenticate(AuthRequest request);
 }
 //todo: saving orders
 //todo: jwt configuration
