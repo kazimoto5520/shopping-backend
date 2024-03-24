@@ -39,7 +39,7 @@ public class BaseServiceImpl implements BaseService {
             user.setEmail(userDto.getEmail());
             user.setMobile(userDto.getMobile());
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            if (userDto.getRole().equalsIgnoreCase("customer") || userDto.getEmail().endsWith("@gmail.com")){
+            if (userDto.getRole().equalsIgnoreCase("customer")/* || userDto.getEmail().endsWith("@gmail.com")*/){
                 user.setRole(UserRole.CUSTOMER);
             } else if (userDto.getRole().equalsIgnoreCase("manufacturer") || userDto.getRole().equalsIgnoreCase("saler")) {
                 user.setRole(UserRole.ENTREPRENEUR);
