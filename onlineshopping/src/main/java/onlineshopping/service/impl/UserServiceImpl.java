@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
             }
 
             return ResponseEntity.ok("Order successfully! we will deliver in no time");
-        }catch (Exception ignored){
+        }catch (Exception exception){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to process your order!");
         }
