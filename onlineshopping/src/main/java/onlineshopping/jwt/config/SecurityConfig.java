@@ -20,13 +20,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf((csrf)->csrf
-                        .ignoringRequestMatchers("/api/v1/base/**","/api/v1/user/cart/checkout","/api/v1/search/**")
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                )
+                .csrf().
+                disable()
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/api/v1/base/**")
+                                .requestMatchers("/api/v1/base/**","/api/v1/search/**")
+                                .permitAll()
+                                .requestMatchers("/api/v1/user/publish-product")
                                 .permitAll()
                                 .requestMatchers("/api/v1/user/cart/checkout","/payments/**")
                                 .permitAll()
