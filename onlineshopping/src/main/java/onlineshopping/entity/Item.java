@@ -29,15 +29,19 @@ public class Item {
     @Column(name = "item_name", nullable = false)
     private String itemName;
 
+    @Column(name = "item_number", nullable = false)
+    private String itemNo;
+
     @Column(name = "price", nullable = false)
     private float actual_price;
 
     @Column(name = "discount")
     private float discount_price;
 
-    private int quantity;
-    private String description;
+    private int quantity;// available stoke quantity of the products/items
+    private String description;//product description
+    private int ratings;
 
     @Column(name = "images")
-    private String imageUrl;
+    private String imageUrl;// url for product images
 }
