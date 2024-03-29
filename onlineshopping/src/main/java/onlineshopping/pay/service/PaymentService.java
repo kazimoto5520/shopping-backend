@@ -1,4 +1,8 @@
-package onlineshopping.pay;
+package onlineshopping.pay.service;
 
-public class PaymentService {
+import onlineshopping.model.PaymentRequest;
+import onlineshopping.model.PaymentResponse;
+
+public interface PaymentService<T extends PaymentRequest, R extends PaymentResponse> {
+    R pay(T request);
 }
