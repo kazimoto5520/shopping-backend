@@ -21,3 +21,5 @@ server:
 logging:
   level:
     org.springframework.security: DEBUG
+clickSend-username: your-username
+clickSend-apiKey: your-apikey
