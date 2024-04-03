@@ -5,15 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 public class ItemFacade {
-    private String item_name;
-    private int stoke_quantity;
-    private float actual_price;
-    private float discount_price;
+    private String itemName;
+    private List<String> sizes;
+    private List<String> colors;
+    private int stokeQuantity;
+    private float actualPrice;
+    private float discountPrice;
     private String description;
     private String imageUrl;
 }
