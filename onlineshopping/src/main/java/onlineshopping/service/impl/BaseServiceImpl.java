@@ -51,7 +51,10 @@ public class BaseServiceImpl implements BaseService {
             var jwt = jwtService.generateToken(user);
             AuthResponse response = new AuthResponse(jwt);
             return ResponseEntity.ok(response);
-        }catch (Exception e){
+        }catch (HandleExceptions exceptions){
+            AuthResponse authResponse = new AuthResponse(exceptions.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
+        } catch (Exception e){
             AuthResponse error = new AuthResponse("Error occurred!");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(error);
