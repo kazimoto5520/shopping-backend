@@ -8,6 +8,7 @@ import onlineshopping.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,19 @@ public class UserController {
     }
     @PostMapping("/publish-product")
     public ResponseEntity<String> publishItem(
-            @RequestBody ItemFacade itemFacade
-    ){
-        return userService.publishItem(itemFacade);
+            @RequestParam(name = "itemName", required = false) String itemName,
+            @RequestParam(name = "sizes", required = false) List<String> sizes,
+            @RequestParam(name = "colors", required = false) List<String> colors,
+            @RequestParam(name = "stokeQuantity", required = false) int stokeQuantity,
+            @RequestParam(name = "actualPrice", required = false) float actualPrice,
+            @RequestParam(name = "discountPrice", required = false) float discountPrice,
+            @RequestParam(name = "description", required = false) String description,
+            @RequestParam(name = "imageUrl", required = false) MultipartFile imageUrl
+            ){
+        return userService.publishItem(
+                itemName,sizes,colors,
+                stokeQuantity,actualPrice,discountPrice,description,imageUrl
+        );
     }
 
 }

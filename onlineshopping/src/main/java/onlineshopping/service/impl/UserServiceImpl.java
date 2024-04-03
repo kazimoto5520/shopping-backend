@@ -11,7 +11,16 @@ import onlineshopping.service.base.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -66,34 +75,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> publishItem(ItemFacade itemFacade) {
-        try {
-            String item_no = generateRandomAlphanumericItemNo();
+    public ResponseEntity<String> publishItem(String itemName, List<String> sizes, List<String> colors, int stokeQuantity, float actualPrice, float discountPrice, String description, MultipartFile imageUrl) {
+            try {
+                String item_no = generateRandomAlphanumericItemNo();
 
-            Item item = getItem(itemFacade, item_no);
+                Item item = getItem(itemName,sizes,colors,stokeQuantity,actualPrice,discountPrice,description,imageUrl, item_no);
 
-            itemRepo.save(item);
-            return ResponseEntity.ok("publishing successfully");
+                itemRepo.save(item);
+                return ResponseEntity.ok("publishing successfully");
 
-        }catch (HandleExceptions exception){
-            throw new HandleExceptions("Something went wrong while processing publication of item: "+ exception);
-        }
+            }catch (HandleExceptions exception){
+                throw new HandleExceptions("Something went wrong while processing publication of item: "+ exception);
+
+            } catch (IOException e) {
+
+                throw new HandleExceptions("Error: "+e);
+            }
     }
 
-    private static Item getItem(ItemFacade itemFacade, String item_no) {
+    private Item getItem(String itemName, List<String> sizes, List<String> colors, int stokeQuantity, float actualPrice, float discountPrice, String description, MultipartFile imageUrl, String itemNo) throws IOException {
         Item item = new Item();
-        item.setItemNo(item_no);
-        item.setItemName(itemFacade.getItemName());
-        item.setActual_price(itemFacade.getActualPrice());
-        item.setQuantity(itemFacade.getStokeQuantity());
-        item.setDescription(itemFacade.getDescription());
-        item.setDiscount_price(itemFacade.getDiscountPrice());
-        item.setImageUrl(itemFacade.getImageUrl());
+        item.setItemNo(itemNo);
+        item.setItemName(itemName);
+        item.setActual_price(actualPrice);
+        item.setQuantity(stokeQuantity);
+        item.setDescription(description);
+        item.setDiscount_price(discountPrice);
+        item.setImageUrl(storeImages(imageUrl));
         item.setRatings(0);// Default each product/item has 0 ratings
-        item.setColors(itemFacade.getColors());
-        item.setSizes(itemFacade.getSizes());
+        item.setColors(colors);
+        item.setSizes(sizes);
         return item;
     }
+
+
+    public String storeImages(MultipartFile imageUrl) throws IOException {
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            throw new IllegalArgumentException("Image file is null or empty");
+        }
+
+        String uploadDirectory = "src/main/resources/static/images";
+        String imageName = StringUtils.cleanPath(Objects.requireNonNull(imageUrl.getOriginalFilename()));
+
+        if (imageName.contains("..")) {
+            throw new IllegalArgumentException("Invalid file format");
+        }
+
+        Path uploadPath = Paths.get(uploadDirectory);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        Path filePath = uploadPath.resolve(imageName);
+        Files.copy(imageUrl.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return "/images/" + imageName;
+    }
+
 
     private void saveOrderItem(Order order, String itemNo, int productQuantity) {
         Item item = itemRepo.findByItemNo(itemNo);
@@ -110,6 +148,7 @@ public class UserServiceImpl implements UserService {
             throw new HandleExceptions("Oops! invalid or not exist item number");
         }
     }
+
 
     private String generateRandomOrderNumber(){
         int orderNumberLength = 5;
