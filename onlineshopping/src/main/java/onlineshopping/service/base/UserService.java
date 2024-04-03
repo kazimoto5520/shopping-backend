@@ -1,6 +1,6 @@
 package onlineshopping.service.base;
 
-import onlineshopping.entity.CartItem;
+import onlineshopping.model.CartItem;
 import onlineshopping.model.ItemFacade;
 import org.springframework.http.ResponseEntity;
 

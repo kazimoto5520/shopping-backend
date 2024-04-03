@@ -10,9 +10,6 @@ public interface BaseService {
 
     AuthResponse authenticate(AuthRequest request);
 }
-//todo: saving orders
-//todo: jwt configuration
-//todo: sign in users
 //todo: payment methods
 //todo: notifications including otp via sms
 //todo: search button enable (pageable format)
