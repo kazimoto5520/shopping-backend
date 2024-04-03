@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,5 +20,5 @@ public class ItemFacade {
     private float actualPrice;
     private float discountPrice;
     private String description;
-    private String imageUrl;
+    private MultipartFile imageUrl;
 }
