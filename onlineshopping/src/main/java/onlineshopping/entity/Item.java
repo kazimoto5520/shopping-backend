@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "items")
 @NoArgsConstructor
@@ -44,4 +46,14 @@ public class Item {
 
     @Column(name = "images")
     private String imageUrl;// url for product images
+
+    @ElementCollection
+    @CollectionTable(name = "item_sizes", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "size")
+    private List<String> sizes; // List of sizes for the item
+
+    @ElementCollection
+    @CollectionTable(name = "item_colors", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "color")
+    private List<String> colors; // List of colors for the item
 }
