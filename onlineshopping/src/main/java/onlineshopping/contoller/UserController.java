@@ -1,7 +1,7 @@
 package onlineshopping.contoller;
 
 import lombok.RequiredArgsConstructor;
-import onlineshopping.entity.CartItem;
+import onlineshopping.model.CartItem;
 import onlineshopping.model.ItemFacade;
 import onlineshopping.model.OrderRequest;
 import onlineshopping.service.impl.UserServiceImpl;
