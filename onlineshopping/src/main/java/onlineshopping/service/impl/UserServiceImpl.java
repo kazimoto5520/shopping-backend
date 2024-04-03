@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import onlineshopping.constants.Status;
 import onlineshopping.entity.*;
 import onlineshopping.exc.HandleExceptions;
+import onlineshopping.model.CartItem;
 import onlineshopping.model.ItemFacade;
 import onlineshopping.repo.*;
 import onlineshopping.service.base.UserService;
@@ -74,21 +75,23 @@ public class UserServiceImpl implements UserService {
             itemRepo.save(item);
             return ResponseEntity.ok("publishing successfully");
 
-        }catch (Exception exception){
-            throw new RuntimeException("Something went wrong while processing publication of item: "+ exception);
+        }catch (HandleExceptions exception){
+            throw new HandleExceptions("Something went wrong while processing publication of item: "+ exception);
         }
     }
 
     private static Item getItem(ItemFacade itemFacade, String item_no) {
         Item item = new Item();
         item.setItemNo(item_no);
-        item.setItemName(itemFacade.getItem_name());
-        item.setActual_price(itemFacade.getActual_price());
-        item.setQuantity(itemFacade.getStoke_quantity());
+        item.setItemName(itemFacade.getItemName());
+        item.setActual_price(itemFacade.getActualPrice());
+        item.setQuantity(itemFacade.getStokeQuantity());
         item.setDescription(itemFacade.getDescription());
-        item.setDiscount_price(itemFacade.getDiscount_price());
+        item.setDiscount_price(itemFacade.getDiscountPrice());
         item.setImageUrl(itemFacade.getImageUrl());
         item.setRatings(0);// Default each product/item has 0 ratings
+        item.setColors(itemFacade.getColors());
+        item.setSizes(itemFacade.getSizes());
         return item;
     }
 
@@ -127,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
         Random random = new Random();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             int index = random.nextInt(alphanumeric.length());
             char randomChar = alphanumeric.charAt(index);
             randomAlphanumericItemNo.append(randomChar);
