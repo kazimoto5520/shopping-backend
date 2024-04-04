@@ -36,4 +36,10 @@ public class OrderItem {
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
+
+    @Column(name = "item_color", nullable = false)
+    private String itemColor;
+
+    @Column(name = "item_size", nullable = false)
+    private String itemSize;
 }
