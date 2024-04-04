@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
                     orderStatus.setOrder(order);
                     statusRepo.save(orderStatus);
 
-                    saveOrderItem(order, item.getItemNo(), item.getProductQuantity());
+                    saveOrderItem(order, item.getItemNo(), item.getProductQuantity(), item.getItemColor(), item.getItemSize());
 
                     return ResponseEntity.ok("Order successfully! we will deliver in no time");
                 }
@@ -133,12 +133,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private void saveOrderItem(Order order, String itemNo, int productQuantity) {
+    private void saveOrderItem(Order order, String itemNo, int productQuantity, String itemColor, String itemSize) {
         Item item = itemRepo.findByItemNo(itemNo);
         if (item != null) {
             OrderItem orderItem = new OrderItem();
             orderItem.setItem(item);
             orderItem.setQuantity(productQuantity);
+            orderItem.setItemColor(itemColor);
+            orderItem.setItemSize(itemSize);
             orderItem.setOrder(order);
             orderItemRepo.save(orderItem);
 

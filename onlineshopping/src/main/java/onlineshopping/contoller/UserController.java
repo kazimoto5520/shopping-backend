@@ -2,7 +2,6 @@ package onlineshopping.contoller;
 
 import lombok.RequiredArgsConstructor;
 import onlineshopping.model.CartItem;
-import onlineshopping.model.ItemFacade;
 import onlineshopping.model.OrderRequest;
 import onlineshopping.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
