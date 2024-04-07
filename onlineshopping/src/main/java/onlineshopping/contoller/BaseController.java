@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import onlineshopping.model.AuthRequest;
 import onlineshopping.model.AuthResponse;
 import onlineshopping.model.UserDto;
-import onlineshopping.service.impl.BaseServiceImpl;
+import onlineshopping.notification.model.LoginRequest;
+import onlineshopping.service.impl.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BaseController {
 
-    private final BaseServiceImpl baseService;
+    private final AuthService baseService;
 
 
     @PostMapping("/signup")
@@ -24,6 +25,13 @@ public class BaseController {
             @RequestBody UserDto userDto
     ){
         return baseService.createAccount(userDto);
+    }
+
+    @PostMapping("/verifyOtpCode")
+    public ResponseEntity<AuthResponse> verifyOtpCodeAndLogin(
+            @RequestBody LoginRequest loginRequest
+    ){
+        return baseService.verifyOtp(loginRequest);
     }
 
     @PostMapping("/authenticate")
