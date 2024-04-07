@@ -2,7 +2,7 @@ package onlineshopping.repo;
 
 import onlineshopping.model.AuthResponse;
 import onlineshopping.model.UserDto;
-import onlineshopping.service.impl.BaseServiceImpl;
+import onlineshopping.service.impl.AuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ class UserRepoTest {
     private UserRepo repo;
 
     @InjectMocks
-    private BaseServiceImpl baseService;
+    private AuthService baseService;
 
     @Test
     public void saveUser(){
