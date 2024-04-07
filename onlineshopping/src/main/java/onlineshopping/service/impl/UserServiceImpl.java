@@ -5,7 +5,6 @@ import onlineshopping.constants.Status;
 import onlineshopping.entity.*;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.model.CartItem;
-import onlineshopping.model.ItemFacade;
 import onlineshopping.repo.*;
 import onlineshopping.service.base.UserService;
 import org.springframework.http.HttpStatus;
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
                     orderStatus.setOrder(order);
                     statusRepo.save(orderStatus);
 
-                    saveOrderItem(order, item.getItemNo(), item.getProductQuantity(), item.getItemColor(), item.getItemSize());
+                    saveOrderItem(order, item.getItemNo(), item.getProductQuantity(), item.getColors(), item.getSizes());
 
                     return ResponseEntity.ok("Order successfully! we will deliver in no time");
                 }
@@ -133,14 +132,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private void saveOrderItem(Order order, String itemNo, int productQuantity, String itemColor, String itemSize) {
+    private void saveOrderItem(Order order, String itemNo, int productQuantity, List<String> sizes, List<String> colors) {
         Item item = itemRepo.findByItemNo(itemNo);
         if (item != null) {
             OrderItem orderItem = new OrderItem();
             orderItem.setItem(item);
             orderItem.setQuantity(productQuantity);
-            orderItem.setItemColor(itemColor);
-            orderItem.setItemSize(itemSize);
+            orderItem.setSizes(sizes);
+            orderItem.setColors(colors);
             orderItem.setOrder(order);
             orderItemRepo.save(orderItem);
 

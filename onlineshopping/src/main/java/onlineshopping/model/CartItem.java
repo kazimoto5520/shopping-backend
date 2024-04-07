@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class CartItem {
     private String itemNo;
     private int productQuantity;
-    private String itemColor;
-    private String itemSize;
+    private List<String> sizes;
+    private List<String> colors;
 }

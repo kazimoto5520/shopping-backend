@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "order_item")
 @NoArgsConstructor
@@ -37,9 +39,13 @@ public class OrderItem {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column(name = "item_color", nullable = false)
-    private String itemColor;
+    @ElementCollection
+    @CollectionTable(name = "item_sizes", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "size")
+    private List<String> sizes; // List of sizes for the item
 
-    @Column(name = "item_size", nullable = false)
-    private String itemSize;
+    @ElementCollection
+    @CollectionTable(name = "item_colors", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "color")
+    private List<String> colors; // List of colors for the item
 }
