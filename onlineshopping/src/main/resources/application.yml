@@ -23,3 +23,8 @@ logging:
     org.springframework.security: DEBUG
 clickSend-username: your-username
 clickSend-apiKey: your-apikey
+
+twilio:
+  accountSid: ACf4e726131494afe439b5671f43504709
+  authToken: e5bde8315f469c5a50bf028e43b4b426
+  phoneNumber: your_twilio_phone_number
