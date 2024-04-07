@@ -38,6 +38,9 @@ public class User implements UserDetails {
     private String mobile;
     private String password;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Otp otpCode;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
