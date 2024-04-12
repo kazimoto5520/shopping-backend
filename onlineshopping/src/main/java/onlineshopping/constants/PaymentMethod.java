@@ -1,6 +1,6 @@
 package onlineshopping.constants;
 
-public enum PaymentProviderType {
+public enum PaymentMethod {
     AIRTEL_MONEY,
     GEPG,
     TIGO_PESA,
