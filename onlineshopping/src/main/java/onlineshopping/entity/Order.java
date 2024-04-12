@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import onlineshopping.pay.entity.Invoice;
+import onlineshopping.pay.entity.Transaction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,7 +32,7 @@ public class Order {
 
     @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id",referencedColumnName = "userId")
-    private User user;
+    private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;
@@ -38,9 +40,17 @@ public class Order {
     @OneToOne(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private OrderStatus orderStatus;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<Transaction> transaction;
+
+    @ManyToOne
+    @JoinColumn(name = "invoice_id", referencedColumnName = "invoiceId")
+    private Invoice invoice;
+
     @Column(name = "order_number",nullable = false)
     private String orderNo;
 
+    @Column(name = "billing_address",nullable = false)
     private String address;
 
     private LocalDate date_created;

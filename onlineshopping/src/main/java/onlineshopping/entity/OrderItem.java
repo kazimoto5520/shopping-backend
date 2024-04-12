@@ -40,12 +40,12 @@ public class OrderItem {
     private int quantity;
 
     @ElementCollection
-    @CollectionTable(name = "item_sizes", joinColumns = @JoinColumn(name = "item_id"))
+    @CollectionTable(name = "order_item_sizes", joinColumns = @JoinColumn(name = "order_item_id"))
     @Column(name = "size")
     private List<String> sizes; // List of sizes for the item
 
     @ElementCollection
-    @CollectionTable(name = "item_colors", joinColumns = @JoinColumn(name = "item_id"))
+    @CollectionTable(name = "order_item_colors", joinColumns = @JoinColumn(name = "order_item_id"))
     @Column(name = "color")
     private List<String> colors; // List of colors for the item
 }

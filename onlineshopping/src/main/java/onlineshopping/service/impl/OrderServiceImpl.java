@@ -2,11 +2,14 @@ package onlineshopping.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import onlineshopping.constants.Status;
+import onlineshopping.constants.TransactionType;
 import onlineshopping.entity.*;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.model.CartItem;
+import onlineshopping.model.PaymentRequest;
+import onlineshopping.pay.entity.Transaction;
 import onlineshopping.repo.*;
-import onlineshopping.service.base.UserService;
+import onlineshopping.service.base.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -25,7 +29,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class OrderServiceImpl implements OrderService {
 
     private final UserRepo userRepo;
     private final OrderRepo orderRepo;
@@ -35,41 +39,36 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<String> processOrder(String email, String street, String region, CartItem item) {
+    public ResponseEntity<Order> processOrder(String email, String street, String region, CartItem item) {
         try {
+
             Customer customer = userRepo.findByEmail(email);
-            if (customer == null){
+            if (customer == null) {
                 throw new HandleExceptions("Oops! you need to have an account");
             }
-            else {
-                Item items = itemRepo.findByItemNo(item.getItemNo());
-                if (items == null){
-                    throw new HandleExceptions("Oops! Can't find that item");
-                }
-                else {
-                    Order order = new Order();
-                    order.setOrderNo(generateRandomOrderNumber());
-                    order.setAddress(street + " " + region);
-                    order.setCustomer(customer);
-                    orderRepo.save(order);
-
-                    OrderStatus orderStatus = new OrderStatus();
-                    orderStatus.setOrder_status(Status.ongoing.name());
-                    orderStatus.setOrder(order);
-                    statusRepo.save(orderStatus);
-
-                    saveOrderItem(order, item.getItemNo(), item.getProductQuantity(), item.getColors(), item.getSizes());
-
-                    return ResponseEntity.ok("Order successfully! we will deliver in no time");
-                }
+            Item items = itemRepo.findByItemNo(item.getItemNo());
+            if (items == null) {
+                throw new HandleExceptions("Oops! Can't find that item");
             }
-        }catch (HandleExceptions exception){
 
-            return ResponseEntity.badRequest().body(exception.getMessage());
-        } catch (Exception exception){
+            Order order = new Order();
+            order.setOrderNo(generateRandomOrderNumber());
+            order.setAddress(street + " " + region);
+            order.setCustomer(customer);
+            orderRepo.save(order);
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to process your order!");
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.setOrder_status(Status.ongoing.name());
+            orderStatus.setOrder(order);
+            statusRepo.save(orderStatus);
+
+            saveOrderItem(order, item.getItemNo(), item.getProductQuantity(), item.getColors(), item.getSizes());
+
+            return ResponseEntity.ok(order);
+        } catch (HandleExceptions exception) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -85,9 +84,7 @@ public class UserServiceImpl implements UserService {
 
             }catch (HandleExceptions exception){
                 throw new HandleExceptions("Something went wrong while processing publication of item: "+ exception);
-
             } catch (IOException e) {
-
                 throw new HandleExceptions("Error: "+e);
             }
     }
