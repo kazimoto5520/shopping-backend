@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class UserRepoTest {
+class CustomerRepoTest {
 
     @Mock
     private UserRepo repo;
