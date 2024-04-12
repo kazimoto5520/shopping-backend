@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> processOrder(String email, String street, String region, CartItem item) {
         try {
-            User user = userRepo.findByEmail(email);
-            if (user == null){
+            Customer customer = userRepo.findByEmail(email);
+            if (customer == null){
                 throw new HandleExceptions("Oops! you need to have an account");
             }
             else {
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
                     Order order = new Order();
                     order.setOrderNo(generateRandomOrderNumber());
                     order.setAddress(street + " " + region);
-                    order.setUser(user);
+                    order.setCustomer(customer);
                     orderRepo.save(order);
 
                     OrderStatus orderStatus = new OrderStatus();
