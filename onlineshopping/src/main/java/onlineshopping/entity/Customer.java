@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -21,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-public class User implements UserDetails {
+public class Customer implements UserDetails {
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -38,15 +37,15 @@ public class User implements UserDetails {
     private String mobile;
     private String password;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private Otp otpCode;
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Otp otp;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     private LocalDate date_created;// when an account created
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "customer",fetch = FetchType.EAGER)
     private List<Order> orders;
 
     @PrePersist
