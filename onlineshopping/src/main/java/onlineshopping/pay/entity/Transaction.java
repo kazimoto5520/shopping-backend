@@ -1,4 +1,4 @@
-package onlineshopping.entity;
+package onlineshopping.pay.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import onlineshopping.constants.TransactionType;
+import onlineshopping.entity.Order;
 
 import java.time.LocalDateTime;
 
@@ -25,12 +26,17 @@ public class Transaction {
             strategy = GenerationType.SEQUENCE,
             generator = "transaction_sequence"
     )
-    private Long transactionId;
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
+
     private double amount;
     private LocalDateTime timestamp;
     private String description;
-    @ManyToOne
+    private String transactionId;
+
+    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", referencedColumnName = "orderId")
     private Order order;
 }

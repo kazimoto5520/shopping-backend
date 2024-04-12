@@ -1,4 +1,4 @@
-package onlineshopping.entity;
+package onlineshopping.pay.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import onlineshopping.constants.PaymentStatus;
+import onlineshopping.entity.Customer;
+import onlineshopping.entity.Order;
 
 import java.time.LocalDate;
 import java.util.List;

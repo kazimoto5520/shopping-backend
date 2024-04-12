@@ -1,14 +1,14 @@
 package onlineshopping.repo;
 
-import onlineshopping.entity.User;
+import onlineshopping.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepo extends JpaRepository<User,Long> {
+public interface UserRepo extends JpaRepository<Customer,Long> {
 
-    User findByEmail(String email);
+    Customer findByEmail(String email);
 
-    User findByMobile(String mobile);
+    Customer findByMobile(String mobile);
 
 }
