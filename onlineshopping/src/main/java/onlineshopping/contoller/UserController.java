@@ -1,9 +1,10 @@
 package onlineshopping.contoller;
 
 import lombok.RequiredArgsConstructor;
-import onlineshopping.model.CartItem;
-import onlineshopping.model.OrderRequest;
-import onlineshopping.service.impl.UserServiceImpl;
+import onlineshopping.entity.Order;
+import onlineshopping.model.*;
+import onlineshopping.pay.PaymentFacade;
+import onlineshopping.service.impl.OrderServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,47 +19,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final OrderServiceImpl userService;
+    private final PaymentFacade paymentFacade;
 
     @PostMapping("/cart/checkout")
-    public ResponseEntity<String> placeOrder(
+    public ResponseEntity<OrderResponse> placeOrder(
             @RequestBody OrderRequest orderRequest
     ) {
-        try {
+        OrderResponse response = new OrderResponse();
 
-            if (orderRequest.getEmail().isEmpty() || orderRequest.getStreet().isEmpty() || orderRequest.getRegion().isEmpty()) {
-
-                return ResponseEntity.badRequest().body("Please fill in all address fields!");
-            }
-            else if (orderRequest.getCartItems() == null || orderRequest.getCartItems().isEmpty()) {
-
-                return ResponseEntity.badRequest().body("Cart is empty!");
-            }
-
-            List<String> processingResults = new ArrayList<>(); // Track processing results
-
-            for (CartItem item : orderRequest.getCartItems()) {
-                try {
-                    userService.processOrder(orderRequest.getEmail(), orderRequest.getStreet(), orderRequest.getRegion(), item);
-                    processingResults.add("Successfully processed item " + item.getItemNo());
-                } catch (Exception e) {
-                    processingResults.add("Failed to process item " + item.getItemNo() + ": " + e.getMessage());
-                }
-            }
-
-            String responseMessage;
-            if (processingResults.stream().allMatch(result -> result.startsWith("Successfully"))) {
-                responseMessage = "Successfully processed all items in your cart!";
-            } else {
-                responseMessage = "Encountered errors while processing some items:\n" + String.join("\n", processingResults);
-            }
-
-            return ResponseEntity.ok(responseMessage);
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to process your order!");
+        if (orderRequest.getEmail().isEmpty() || orderRequest.getStreet().isEmpty() || orderRequest.getRegion().isEmpty()) {
+            response.setErrorMessage("Please fill in all address fields!");
+            return ResponseEntity.badRequest().body(response);
+        } else if (orderRequest.getCartItems() == null || orderRequest.getCartItems().isEmpty()) {
+            response.setErrorMessage("Cart is empty!");
+            return ResponseEntity.badRequest().body(response);
         }
+
+        for (CartItem item : orderRequest.getCartItems()) {
+            try {
+               Order order= userService.processOrder(orderRequest.getEmail(), orderRequest.getStreet(), orderRequest.getRegion(), item).getBody();
+                assert order != null;
+                response.setOrderNo(order.getOrderNo());
+                response.setCustomerEmail(order.getCustomer().getEmail());
+                response.setBilling_address(order.getAddress());
+            } catch (Exception e) {
+                response.setSuccessful(false);
+                response.setErrorMessage(response.getErrorMessage() + "\nFailed to process item " + item.getItemNo() + ": " + e.getMessage());
+            }
+        }
+
+        response.setSuccessful(response.getErrorMessage() == null);
+        return ResponseEntity.ok(response);
     }
+
     @PostMapping("/publish-product")
     public ResponseEntity<String> publishItem(
             @RequestParam(name = "itemName", required = false) String itemName,
@@ -74,6 +68,12 @@ public class UserController {
                 itemName,sizes,colors,
                 stokeQuantity,actualPrice,discountPrice,description,imageUrl
         );
+    }
+
+    @PostMapping("/payments")
+    public ResponseEntity<PaymentResponse> makePayment(@RequestBody PaymentRequest paymentRequest)
+    {
+       return ResponseEntity.ok(paymentFacade.pay(paymentRequest));
     }
 
 }

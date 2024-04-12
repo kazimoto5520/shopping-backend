@@ -1,9 +1,10 @@
 package onlineshopping.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import onlineshopping.constants.UserRole;
+import onlineshopping.entity.Customer;
 import onlineshopping.entity.Otp;
-import onlineshopping.entity.User;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.exc.InvalidOtpException;
 import onlineshopping.jwt.service.JwtService;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService implements BaseService {
 
     private final UserRepo userRepo;
@@ -40,34 +42,36 @@ public class AuthService implements BaseService {
     @Override
     public ResponseEntity<AuthResponse> createAccount(UserDto userDto) {
         try {
-            User checkExisting = userRepo.findByEmail(userDto.getEmail());
+            Customer checkExisting = userRepo.findByEmail(userDto.getEmail());
             if (checkExisting != null){
                 throw new HandleExceptions("Already user with same email exists");
             }
 
-            User user = new User();
-            user.setName(userDto.getName());
-            user.setEmail(userDto.getEmail());
-            user.setMobile(userDto.getMobile());
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            Customer customer = new Customer();
+            customer.setName(userDto.getName());
+            customer.setEmail(userDto.getEmail());
+            customer.setMobile(userDto.getMobile());
+            customer.setPassword(passwordEncoder.encode(userDto.getPassword()));
             if (userDto.getRole().equalsIgnoreCase("customer")/* || userDto.getEmail().endsWith("@gmail.com")*/){
-                user.setRole(UserRole.CUSTOMER);
+                customer.setRole(UserRole.CUSTOMER);
             } else if (userDto.getRole().equalsIgnoreCase("manufacturer") || userDto.getRole().equalsIgnoreCase("saler")) {
-                user.setRole(UserRole.ENTREPRENEUR);
+                customer.setRole(UserRole.ENTREPRENEUR);
             } else if (userDto.getName().equalsIgnoreCase("admin")|| userDto.getEmail().contains("admin")) {
-                user.setRole(UserRole.ADMIN);
+                customer.setRole(UserRole.ADMIN);
             }
 
-            userRepo.save(user);
+            userRepo.save(customer);
 
             // otp
             String otpCode = otpService.generateOtp();
-            otpService.sendOtp(userDto.getMobile(), otpCode);
+            log.info("Generated OTP code for mobile {}: {}", userDto.getMobile(), otpCode);
+            /*otpService.sendOtp(userDto.getMobile(), otpCode);*/
 
             //storing otp
             Otp otp = Otp.builder()
                     .otpCode(otpCode)
-                    .user(user)
+                    .createdAt(LocalDateTime.now())
+                    .customer(customer)
                     .build();
             otpCodeRepo.save(otp);
 
@@ -101,13 +105,13 @@ public class AuthService implements BaseService {
     @Override
     public ResponseEntity<AuthResponse> verifyOtp(LoginRequest loginRequest) {
         try {
-            User userWithOtp = userRepo.findByMobile(loginRequest.getMobile());
+            Customer customerWithOtp = userRepo.findByMobile(loginRequest.getMobile());
 
-            if (userWithOtp == null){
+            if (customerWithOtp == null){
                 throw new HandleExceptions("Oops! user not found");
             }
             else {
-                Otp otpWithUser = otpCodeRepo.findByUser(userWithOtp);
+                Otp otpWithUser = otpCodeRepo.findByCustomer(customerWithOtp);
                  String storedOtp = otpWithUser.getOtpCode();
 
                  if (!loginRequest.getOtp().equals(storedOtp)){
@@ -117,7 +121,11 @@ public class AuthService implements BaseService {
                     throw new InvalidOtpException("OTP has expired");
                  }
                   else {
-                    String jwt = jwtService.generateToken(userWithOtp);
+                      // generate token for user with valid otp codes
+                    String jwt = jwtService.generateToken(customerWithOtp);
+
+                    // clear the otp entity associated with customer from database
+                     otpCodeRepo.delete(otpWithUser);
 
                      AuthResponse authResponse = AuthResponse
                              .builder()

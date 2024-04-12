@@ -30,9 +30,9 @@ public class Otp {
     @Column(name = "otp", nullable = false)
     private String otpCode;
 
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
-    private User user;
+    private Customer customer;
 
     private LocalDateTime createdAt;
 }
