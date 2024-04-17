@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import onlineshopping.constants.TransactionType;
 import onlineshopping.entity.Order;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,7 +33,7 @@ public class Transaction {
     private TransactionType type;
 
     private double amount;
-    private LocalDateTime timestamp;
+    private LocalDate timestamp;
     private String description;
     private String transactionId;
 
