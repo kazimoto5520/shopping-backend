@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -90,16 +91,21 @@ public class AuthService implements BaseService {
     }
 
     @Override
-    public AuthResponse authenticate(AuthRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = userRepo.findByEmail(request.getEmail());
-        var token = jwtService.generateToken(user);
-        return AuthResponse.builder().token(token).build();
+    public ResponseEntity<AuthResponse> authenticate(AuthRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+            var user = userRepo.findByEmail(request.getEmail());
+            var token = jwtService.generateToken(user);
+            return ResponseEntity.ok(AuthResponse.builder().token(token).build());
+        }catch (AuthenticationException handleExceptions){
+            AuthResponse error = AuthResponse.builder().token("Error: "+handleExceptions.getMessage()).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
     }
 
     @Override

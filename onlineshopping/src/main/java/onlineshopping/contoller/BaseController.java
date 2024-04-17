@@ -38,6 +38,6 @@ public class BaseController {
     public ResponseEntity<AuthResponse> authenticate(
             @RequestBody AuthRequest request)
     {
-        return ResponseEntity.ok(baseService.authenticate(request));
+        return baseService.authenticate(request);
     }
 }
