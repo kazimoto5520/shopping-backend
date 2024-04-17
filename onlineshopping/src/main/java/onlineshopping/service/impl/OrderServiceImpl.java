@@ -2,12 +2,9 @@ package onlineshopping.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import onlineshopping.constants.Status;
-import onlineshopping.constants.TransactionType;
 import onlineshopping.entity.*;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.model.CartItem;
-import onlineshopping.model.PaymentRequest;
-import onlineshopping.pay.entity.Transaction;
 import onlineshopping.repo.*;
 import onlineshopping.service.base.OrderService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -93,10 +89,10 @@ public class OrderServiceImpl implements OrderService {
         Item item = new Item();
         item.setItemNo(itemNo);
         item.setItemName(itemName);
-        item.setActual_price(actualPrice);
+        item.setActualPrice(actualPrice);
         item.setQuantity(stokeQuantity);
         item.setDescription(description);
-        item.setDiscount_price(discountPrice);
+        item.setDiscountPrice(discountPrice);
         item.setImageUrl(storeImages(imageUrl));
         item.setRatings(0);// Default each product/item has 0 ratings
         item.setColors(colors);

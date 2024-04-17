@@ -8,7 +8,7 @@ public interface SearchBaseService {
 
     List<String> findAllItemNames();
 
-    List<Item> findAllItems(String itemQuery);
+    List<Item> findAllItems();
 
     Item findUniqueItem(String queryString);
 }

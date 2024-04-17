@@ -28,19 +28,21 @@ public class SearchServiceImpl implements SearchBaseService {
        }
     }
 
+
     @Override
-    public List<Item> findAllItems(String itemQuery) {
+    public List<Item> findAllItems() {
         try {
-            return itemRepo.findByItemNameContainingIgnoreCase(itemQuery);
+            return itemRepo.findAllItem();
         }catch (DataAccessException exception){
-            throw new HandleExceptions("Error: No search result found");
+            throw new HandleExceptions("Error: No search result found, "+exception.getMessage());
         }
     }
+
 
     @Override
     public Item findUniqueItem(String queryString) {
         try {
-            return itemRepo.findByItemNameIgnoreCase(queryString);
+            return itemRepo.findByItemNo(queryString);
 
         }catch (DataAccessException exception){
             throw new HandleExceptions("Error: No search result found");

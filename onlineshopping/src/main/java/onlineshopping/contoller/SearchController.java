@@ -25,19 +25,22 @@ public class SearchController {
         return ResponseEntity.ok(itemOptions);
     }
 
+
+    // querying all items without passing any parameter, just automatically after the system loaded
     @GetMapping("/items")
-    public ResponseEntity<List<Item>> findAllItems(@RequestParam String itemQuery){
-        List<Item> items = searchService.findAllItems(itemQuery);
+    public ResponseEntity<List<Item>> findAllItems(){
+        List<Item> items = searchService.findAllItems();
         return ResponseEntity.ok(items);
     }
 
+    //querying specific item, with passed item number/id as a parameter
     @GetMapping("/item-product")
-    public ResponseEntity<Item> findItem(@RequestParam String queryString){
-        Item queryItem = searchService.findUniqueItem(queryString);
+    public ResponseEntity<Item> findItem(@RequestParam String queryStr){
+        Item queryItem = searchService.findUniqueItem(queryStr);
         return ResponseEntity.ok(queryItem);
     }
 }
-//auto compli
-//item zote
-//exactly
-//
+// fixme: searching all items using parameter
+//fixme: search all items without passing any parameter
+//fixme: search for autocompletion words by passing parameter
+//todo: fixing authenticate api, handling 403 error, and returning error message for failed or else jwt token for success
