@@ -35,10 +35,10 @@ public class Item {
     private String itemNo;
 
     @Column(name = "price", nullable = false)
-    private float actual_price;
+    private float actualPrice;
 
     @Column(name = "discount")
-    private float discount_price;
+    private float discountPrice;
 
     private int quantity;// available stoke quantity of the products/items
     private String description;//product description
@@ -47,12 +47,12 @@ public class Item {
     @Column(name = "images")
     private String imageUrl;// url for product images
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "item_sizes", joinColumns = @JoinColumn(name = "item_id"))
     @Column(name = "size")
     private List<String> sizes; // List of sizes for the item
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "item_colors", joinColumns = @JoinColumn(name = "item_id"))
     @Column(name = "color")
     private List<String> colors; // List of colors for the item

@@ -11,11 +11,13 @@ import java.util.List;
 public interface ItemRepo extends JpaRepository<Item, Long> {
     Item findByItemNo(String itemNo);
 
-    @Query("SELECT DISTINCT i.itemName FROM Item i")
+    @Query("SELECT DISTINCT i.itemName FROM Item i"
+    )
     List<String> findAllItems();
 
-    List<Item> findByItemNameContainingIgnoreCase(String itemQuery);
-
-    Item findByItemNameIgnoreCase(String queryString);
-
+    @Query("SELECT i.itemName, i.itemNo, i.actualPrice, i.discountPrice, i.quantity, i.description, i.ratings, i.imageUrl, i.sizes, i.colors " +
+       "FROM Item i " +
+       "ORDER BY i.itemName"
+    )
+    List<Item> findAllItem();
 }
