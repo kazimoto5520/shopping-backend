@@ -53,14 +53,16 @@ public class AuthService implements BaseService {
             customer.setEmail(userDto.getEmail());
             customer.setMobile(userDto.getMobile());
             customer.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            if (userDto.getRole().equalsIgnoreCase("customer")/* || userDto.getEmail().endsWith("@gmail.com")*/){
-                customer.setRole(UserRole.CUSTOMER);
-            } else if (userDto.getRole().equalsIgnoreCase("manufacturer") || userDto.getRole().equalsIgnoreCase("saler")) {
+            if (userDto.getRole() != null && (userDto.getRole().equalsIgnoreCase("manufacturer") ||
+                            userDto.getRole().equalsIgnoreCase("sale"))) {
                 customer.setRole(UserRole.ENTREPRENEUR);
-            } else if (userDto.getName().equalsIgnoreCase("admin")|| userDto.getEmail().contains("admin")) {
-                customer.setRole(UserRole.ADMIN);
+            } else {
+                customer.setRole(UserRole.CUSTOMER);
             }
 
+ // fixme: list of object array
+ //todo: every request should embedded with jwt token
+// todo: all search request should an array of object;
             userRepo.save(customer);
 
             // otp
@@ -84,7 +86,12 @@ public class AuthService implements BaseService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
         }
         catch (Exception e){
-            AuthResponse error = new AuthResponse("Error occurred!");
+            AuthResponse error;
+            if (e instanceof NullPointerException) {
+                error = new AuthResponse("Error: User role information is missing.");
+            } else {
+                error = new AuthResponse("Error: " + e.getMessage());
+            }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(error);
         }
