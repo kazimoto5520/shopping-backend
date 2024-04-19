@@ -5,12 +5,10 @@ import onlineshopping.entity.Order;
 import onlineshopping.model.*;
 import onlineshopping.pay.PaymentFacade;
 import onlineshopping.service.impl.OrderServiceImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,12 +43,17 @@ public class UserController {
                 response.setBilling_address(order.getAddress());
             } catch (Exception e) {
                 response.setSuccessful(false);
-                response.setErrorMessage(response.getErrorMessage() + "\nFailed to process item " + item.getItemNo() + ": " + e.getMessage());
+                String itemErrorMessage = String.format("Failed to process item %s: %s", item.getItemNo(), e.getMessage());
+                response.setErrorMessage((response.getErrorMessage() == null ? "" : response.getErrorMessage() + "\n") + itemErrorMessage);
             }
         }
 
         response.setSuccessful(response.getErrorMessage() == null);
-        return ResponseEntity.ok(response);
+        if (response.isSuccessful()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @PostMapping("/publish-product")

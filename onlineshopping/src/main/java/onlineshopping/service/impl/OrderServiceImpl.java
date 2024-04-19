@@ -136,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setOrder(order);
             orderItemRepo.save(orderItem);
 
-            item.setQuantity(item.getQuantity() - 1);
+            item.setQuantity(item.getQuantity() - productQuantity);
             itemRepo.save(item);
         } else {
             throw new HandleExceptions("Oops! invalid or not exist item number");
