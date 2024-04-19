@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -43,9 +44,8 @@ public class SearchServiceImpl implements SearchBaseService {
     public Item findUniqueItem(String queryString) {
         try {
             return itemRepo.findByItemNo(queryString);
-
-        }catch (DataAccessException exception){
-            throw new HandleExceptions("Error: No search result found");
+        } catch (NoSuchElementException e) {
+            throw new HandleExceptions("No item found matching your search query.");
         }
     }
 

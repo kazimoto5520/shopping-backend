@@ -2,7 +2,10 @@ package onlineshopping.contoller;
 
 import lombok.RequiredArgsConstructor;
 import onlineshopping.entity.Item;
+import onlineshopping.exc.HandleExceptions;
+import onlineshopping.model.ItemResponse;
 import onlineshopping.service.impl.SearchServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,12 +38,27 @@ public class SearchController {
 
     //querying specific item, with passed item number/id as a parameter
     @GetMapping("/item-product")
-    public ResponseEntity<Item> findItem(@RequestParam String queryStr){
+    public ResponseEntity<ItemResponse> findItem(@RequestParam String queryStr){
         Item queryItem = searchService.findUniqueItem(queryStr);
-        return ResponseEntity.ok(queryItem);
+            if (queryItem != null){
+                ItemResponse itemResponse = ItemResponse.builder()
+                        .itemNo(queryItem.getItemNo())
+                        .itemName(queryItem.getItemName())
+                        .actualPrice(queryItem.getActualPrice())
+                        .discountPrice(queryItem.getDiscountPrice())
+                        .quantity(queryItem.getQuantity())
+                        .description(queryItem.getDescription())
+                        .ratings(queryItem.getRatings())
+                        .imageUrl(queryItem.getImageUrl())
+                        .sizes(queryItem.getSizes())
+                        .colors(queryItem.getColors())
+                        .build();
+                return ResponseEntity.ok(itemResponse);
+            }else {
+                throw new HandleExceptions("No item found matching your search query.");
+            }
     }
 }
 // fixme: searching all items using parameter
 //fixme: search all items without passing any parameter
 //fixme: search for autocompletion words by passing parameter
-//todo: fixing authenticate api, handling 403 error, and returning error message for failed or else jwt token for success
