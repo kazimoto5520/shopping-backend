@@ -24,7 +24,11 @@ public class SearchController {
     @GetMapping("/item-options")
     public ResponseEntity<List<String>> itemProducts(@RequestParam String queryStr){
         List<String> itemOptions = searchService.findItemNames(queryStr);
-        return ResponseEntity.ok(itemOptions);
+        if (itemOptions != null) {
+            return ResponseEntity.ok(itemOptions);
+        }else {
+            throw new SearchExceptions("No option matches");
+        }
     }
 
 
