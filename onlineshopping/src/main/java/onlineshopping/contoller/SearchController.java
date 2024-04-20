@@ -3,6 +3,7 @@ package onlineshopping.contoller;
 import lombok.RequiredArgsConstructor;
 import onlineshopping.entity.Item;
 import onlineshopping.exc.HandleExceptions;
+import onlineshopping.exc.SearchExceptions;
 import onlineshopping.model.ItemResponse;
 import onlineshopping.service.impl.SearchServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,7 @@ public class SearchController {
                         .build();
                 return ResponseEntity.ok(itemResponse);
             }else {
-                throw new HandleExceptions("No item found matching your search query.");
+                throw new SearchExceptions("No item found matching your search query.");
             }
     }
 }
