@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface SearchBaseService {
 
-    List<String> findAllItemNames();
+    List<String> findItemNames(String queryStr);
 
-    List<Item> findAllItems();
+    List<Item> findFoundItems();
 
     Item findUniqueItem(String queryString);
 }

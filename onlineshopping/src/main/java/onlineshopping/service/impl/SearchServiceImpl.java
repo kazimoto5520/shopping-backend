@@ -21,9 +21,9 @@ public class SearchServiceImpl implements SearchBaseService {
     private final ItemRepo itemRepo;
 
     @Override
-    public List<String> findAllItemNames() {
+    public List<String> findItemNames(String queryStr) {
        try {
-           return itemRepo.findAllItems();
+           return itemRepo.findItemNames(queryStr);
        }catch (DataAccessException exception){
            throw new HandleExceptions("Error: No search result found");
        }
@@ -31,7 +31,7 @@ public class SearchServiceImpl implements SearchBaseService {
 
 
     @Override
-    public List<Item> findAllItems() {
+    public List<Item> findFoundItems() {
         try {
             return itemRepo.findAllItem();
         }catch (DataAccessException exception){

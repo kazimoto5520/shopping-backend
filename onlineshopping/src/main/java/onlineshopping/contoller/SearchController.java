@@ -20,10 +20,10 @@ public class SearchController {
 
     private final SearchServiceImpl searchService;
 
-    // auto completion drop-down
+    // auto completion drop-down by passing query parameter
     @GetMapping("/item-options")
-    public ResponseEntity<List<String>> itemProducts(){
-        List<String> itemOptions = searchService.findAllItemNames();
+    public ResponseEntity<List<String>> itemProducts(@RequestParam String queryStr){
+        List<String> itemOptions = searchService.findItemNames(queryStr);
         return ResponseEntity.ok(itemOptions);
     }
 
@@ -31,7 +31,7 @@ public class SearchController {
     // querying all items without passing any parameter, just automatically after the system loaded
     @GetMapping("/items")
     public ResponseEntity<List<Item>> findAllItems(){
-        List<Item> items = searchService.findAllItems();
+        List<Item> items = searchService.findFoundItems();
         return ResponseEntity.ok(items);
     }
 
@@ -58,6 +58,4 @@ public class SearchController {
             }
     }
 }
-// fixme: searching all items using parameter
-//fixme: search all items without passing any parameter
-//fixme: search for autocompletion words by passing parameter
+
