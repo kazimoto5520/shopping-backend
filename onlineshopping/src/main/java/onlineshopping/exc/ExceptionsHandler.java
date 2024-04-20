@@ -17,15 +17,4 @@ public class ExceptionsHandler {
         );
         return new ResponseEntity<>(exceptionFields,HttpStatus.BAD_REQUEST);
     }
-
-
-    @ExceptionHandler(value = {SearchExceptions.class})
-    public ResponseEntity<Object> handleNoSuchFieldException(SearchExceptions searchExceptions){
-        GlobalExceptionFields fields = new GlobalExceptionFields(
-                searchExceptions.getMessage(),
-                searchExceptions.getCause(),
-                HttpStatus.NOT_FOUND
-        );
-        return new ResponseEntity<>(fields, HttpStatus.NOT_FOUND);
-    }
 }
