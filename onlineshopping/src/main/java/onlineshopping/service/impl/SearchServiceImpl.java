@@ -35,7 +35,7 @@ public class SearchServiceImpl implements SearchBaseService {
         try {
             return itemRepo.findAllItem();
         }catch (DataAccessException exception){
-            throw new HandleExceptions("Error: No search result found, "+exception.getMessage());
+            throw new HandleExceptions("Error: "+exception.getMessage());
         }
     }
 

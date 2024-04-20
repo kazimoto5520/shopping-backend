@@ -2,11 +2,9 @@ package onlineshopping.contoller;
 
 import lombok.RequiredArgsConstructor;
 import onlineshopping.entity.Item;
-import onlineshopping.exc.HandleExceptions;
 import onlineshopping.exc.SearchExceptions;
 import onlineshopping.model.ItemResponse;
 import onlineshopping.service.impl.SearchServiceImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +35,7 @@ public class SearchController {
         return ResponseEntity.ok(items);
     }
 
-    //querying specific item, with passed item number/id as a parameter
+    //querying specific item, with passed item number as a parameter
     @GetMapping("/item-product")
     public ResponseEntity<ItemResponse> findItem(@RequestParam String queryStr){
         Item queryItem = searchService.findUniqueItem(queryStr);
