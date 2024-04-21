@@ -1,0 +1,23 @@
+##Mdsoln
+
+## admin hardcoded query opt1:
+INSERT INTO users (user_id,name, email, mobile, password, role)
+VALUES(1,'Admin', 'admin@onlineshopping.com', '+25571761117', '$2a$10$VFUiUr1OLxoeqIY/9gxoke9nvAq9epqPnSAKCwR4APK9DoJBc1/Sq','ADMIN');
+
+## admin json login request
+{
+    "email":"admin@onlineshopping.com",
+    "password":"admin0102"
+}
+
+## development mode
+-set the ddl-auto to 'create drop' during testing then after reset it to 'update'
+    dev mode:
+         jpa:
+           hibernate:
+             ddl-auto: create-drop (you create all tables in every run the project and drop once stopped)
+
+    dep mode:
+          jpa:
+            hibernate:
+              ddl-auto: update
