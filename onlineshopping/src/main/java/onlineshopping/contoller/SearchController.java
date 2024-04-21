@@ -20,7 +20,7 @@ public class SearchController {
 
     private final SearchServiceImpl searchService;
 
-    // auto completion drop-down by passing query parameter
+    // auto-completion drop-down by passing query parameter
     @GetMapping("/item-options")
     public ResponseEntity<List<String>> itemProducts(@RequestParam String queryStr){
         List<String> itemOptions = searchService.findItemNames(queryStr);
