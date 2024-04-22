@@ -106,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("Image file is null or empty");
         }
 
-        String uploadDirectory = "src/main/resources/static/images";
+        String uploadDirectory = "onlineshopping/src/main/resources/static/images";
         String imageName = StringUtils.cleanPath(Objects.requireNonNull(imageUrl.getOriginalFilename()));
 
         if (imageName.contains("..")) {
@@ -121,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
         Path filePath = uploadPath.resolve(imageName);
         Files.copy(imageUrl.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return "/images/" + imageName;
+        return imageName;
     }
 
 
