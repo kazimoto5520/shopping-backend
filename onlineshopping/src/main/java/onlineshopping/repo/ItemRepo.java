@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ItemRepo extends JpaRepository<Item, Long> {
@@ -20,4 +21,7 @@ public interface ItemRepo extends JpaRepository<Item, Long> {
             "LEFT JOIN i.colors c " +
             "ORDER BY i.itemName")
     List<Item> findAllItem();
+
+    @Query("SELECT i.imageUrl FROM Item i WHERE i.imageUrl LIKE :imageName")
+    Optional<String> findByImageUrl(@Param("imageName") String imageName);
 }

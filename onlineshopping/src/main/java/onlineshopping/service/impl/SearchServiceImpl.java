@@ -6,18 +6,19 @@ import onlineshopping.exc.HandleExceptions;
 import onlineshopping.repo.*;
 import onlineshopping.service.base.SearchBaseService;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchBaseService {
-    private final UserRepo userRepo;
-    private final OrderRepo orderRepo;
-    private final OrderStatusRepo orderStatusRepo;
-    private final OrderItemRepo orderItemRepo;
+
     private final ItemRepo itemRepo;
 
     @Override
@@ -46,6 +47,17 @@ public class SearchServiceImpl implements SearchBaseService {
             return itemRepo.findByItemNo(queryString);
         } catch (NoSuchElementException e) {
             throw new HandleExceptions("No item found matching your search query.");
+        }
+    }
+
+    public ResponseEntity<String> getImagePath(String imageName){
+        Optional<String> image_path = itemRepo.findByImageUrl(imageName);
+        if (image_path.isPresent()){
+            String imagePath = "/images/" + imageName;
+            return ResponseEntity.status(HttpStatus.FOUND).body(imagePath);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oops! image not found");
         }
     }
 

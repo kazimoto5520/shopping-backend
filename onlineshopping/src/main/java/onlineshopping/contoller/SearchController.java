@@ -6,10 +6,7 @@ import onlineshopping.exc.SearchExceptions;
 import onlineshopping.model.ItemResponse;
 import onlineshopping.service.impl.SearchServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,6 +57,12 @@ public class SearchController {
             }else {
                 throw new SearchExceptions("No item found matching your search query.");
             }
+    }
+
+    //querying image by passing image name
+    @GetMapping("/image/{imageName}")
+    public ResponseEntity<String> getImage(@PathVariable String imageName){
+        return searchService.getImagePath(imageName);
     }
 }
 
