@@ -24,7 +24,7 @@ public class SecurityConfig {
                 disable()
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/api/v1/base/**","/api/v1/search/**")
+                                .requestMatchers("/api/v1/base/**","/api/v1/search/**","/images/{imageName}")
                                 .permitAll()
                                 .requestMatchers("/api/v1/search/item-options","/api/v1/search/items","/api/v1/search/item-product")
                                 .permitAll()
