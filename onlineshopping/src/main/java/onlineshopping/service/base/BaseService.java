@@ -13,5 +13,4 @@ public interface BaseService {
 
     ResponseEntity<AuthResponse> verifyOtp(LoginRequest loginRequest);
 }
-//todo: admin page filling eg sales report
-//todo: mail configurations
+

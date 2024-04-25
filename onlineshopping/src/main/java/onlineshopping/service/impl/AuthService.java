@@ -60,9 +60,7 @@ public class AuthService implements BaseService {
                 customer.setRole(UserRole.CUSTOMER);
             }
 
- // fixme: list of object array
  //todo: every request should embedded with jwt token
-// todo: all search request should an array of object;
             userRepo.save(customer);
 
             // otp
