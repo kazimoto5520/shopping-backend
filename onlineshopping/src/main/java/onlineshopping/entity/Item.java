@@ -40,20 +40,20 @@ public class Item {
     @Column(name = "discount")
     private float discountPrice;
 
-    private int quantity;// available stoke quantity of the products/items
-    private String description;//product description
+    private int quantity;
+    private String description;
     private int ratings;
 
     @Column(name = "images")
-    private String imageUrl;// url for product images
+    private String imageUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "item_sizes", joinColumns = @JoinColumn(name = "item_id"))
     @Column(name = "size")
-    private List<String> sizes; // List of sizes for the item
+    private List<String> sizes;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "item_colors", joinColumns = @JoinColumn(name = "item_id"))
     @Column(name = "color")
-    private List<String> colors; // List of colors for the item
+    private List<String> colors;
 }

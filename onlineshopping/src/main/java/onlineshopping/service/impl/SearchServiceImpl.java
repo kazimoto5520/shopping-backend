@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +34,20 @@ public class SearchServiceImpl implements SearchBaseService {
 
     @Override
     public List<Item> findFoundItems() {
-        try {
-            return itemRepo.findAllItem();
-        }catch (DataAccessException exception){
-            throw new HandleExceptions("Error: "+exception.getMessage());
+        List<Item> items = itemRepo.findAllItem();
+        for (Item item : items) {
+            // Process sizes and colors to remove escaped quotes
+            List<String> processedSizes = item.getSizes().stream()
+                    .map(size -> size.replaceAll("^\"|\"$", ""))
+                    .collect(Collectors.toList());
+            item.setSizes(processedSizes);
+
+            List<String> processedColors = item.getColors().stream()
+                    .map(color -> color.replaceAll("^\"|\"$", ""))
+                    .collect(Collectors.toList());
+            item.setColors(processedColors);
         }
+        return items;
     }
 
 
