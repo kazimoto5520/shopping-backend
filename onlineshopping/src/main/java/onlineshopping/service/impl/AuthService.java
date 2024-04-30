@@ -7,6 +7,7 @@ import onlineshopping.entity.Customer;
 import onlineshopping.entity.Otp;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.exc.InvalidOtpException;
+import onlineshopping.exc.SearchExceptions;
 import onlineshopping.jwt.service.JwtService;
 import onlineshopping.model.AuthRequest;
 import onlineshopping.model.AuthResponse;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,7 @@ public class AuthService implements BaseService {
     private final OtpService otpService;
     private final OtpCodeRepo otpCodeRepo;
 
-    private static final int OTP_EXPIRATION_MINUTES = 15;
+    private static final long OTP_EXPIRATION_MINUTES = 5;
 
     @Override
     public ResponseEntity<AuthResponse> createAccount(UserDto userDto) {
@@ -53,7 +55,14 @@ public class AuthService implements BaseService {
             customer.setEmail(userDto.getEmail());
             customer.setMobile(userDto.getMobile());
             customer.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            customer.setRole(UserRole.CUSTOMER);//default user will have customer role
+            if (userDto.getRole() != null && (userDto.getRole().equalsIgnoreCase("manufacturer") ||
+                            userDto.getRole().equalsIgnoreCase("sale"))) {
+                customer.setRole(UserRole.ENTREPRENEUR);
+            } else {
+                customer.setRole(UserRole.CUSTOMER);
+            }
+
+ //todo: every request should embedded with jwt token
             userRepo.save(customer);
 
             // otp
@@ -149,6 +158,52 @@ public class AuthService implements BaseService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
 
+    }
+
+
+    @Override
+    public ResponseEntity<AuthResponse> resendOtpCodes(String phoneNumber, String oldOtpCodes) {
+        try {
+            Customer isUserPresent = userRepo.findByMobile(phoneNumber);
+            if (isUserPresent == null){
+                throw new SearchExceptions("Oops! invalid phone number!");
+            }
+
+            if (isOtpExpired(isUserPresent,oldOtpCodes)){
+               throw new InvalidOtpException("Your otp have not expired");
+            }
+
+            // otp
+            String otpCode = otpService.generateOtp();
+            log.info("Generated OTP code for mobile {}: {}", phoneNumber, otpCode);
+            /*otpService.sendOtp(userDto.getMobile(), otpCode);*/
+
+            String hashedOtpCodes = passwordEncoder.encode(otpCode);
+
+            Otp regeneratedOtpCodes =  Otp.builder()
+                    .otpCode(hashedOtpCodes)
+                    .createdAt(LocalDateTime.now())
+                    .customer(isUserPresent)
+                    .build();
+            otpCodeRepo.save(regeneratedOtpCodes);
+
+            AuthResponse response = new AuthResponse("OTP sent successfully to your phone number");
+            return ResponseEntity.ok(response);
+
+        }catch (SearchExceptions exceptions){
+            throw new SearchExceptions(exceptions.getMessage());
+
+        } catch (Exception exception){
+            throw new HandleExceptions(exception.getMessage());
+        }
+    }
+
+    private boolean isOtpExpired(Customer customer, String providedOtp) {
+        Otp otp = otpCodeRepo.findByCustomer(customer);
+        if (otp == null || !passwordEncoder.matches(providedOtp, otp.getOtpCode())) {
+            return false;
+        }
+        return LocalDateTime.now().minusMinutes(OTP_EXPIRATION_MINUTES).isAfter(otp.getCreatedAt());
     }
 
 }

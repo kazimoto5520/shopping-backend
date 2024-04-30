@@ -12,5 +12,8 @@ public interface BaseService {
     ResponseEntity<AuthResponse> authenticate(AuthRequest request);
 
     ResponseEntity<AuthResponse> verifyOtp(LoginRequest loginRequest);
+
+    ResponseEntity<AuthResponse> resendOtpCodes(String phoneNumber, String oldOtpCodes);
+
 }
 

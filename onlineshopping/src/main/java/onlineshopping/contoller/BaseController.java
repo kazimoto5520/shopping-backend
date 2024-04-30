@@ -7,10 +7,7 @@ import onlineshopping.model.UserDto;
 import onlineshopping.notification.model.LoginRequest;
 import onlineshopping.service.impl.AuthService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/base")
@@ -39,5 +36,13 @@ public class BaseController {
             @RequestBody AuthRequest request)
     {
         return baseService.authenticate(request);
+    }
+
+    @PostMapping("/resendOtpCodes")
+    public ResponseEntity<AuthResponse> resendOtpCodes(
+            @RequestParam String phoneNumber,
+            @RequestParam String oldOtpCodes
+    ){
+        return baseService.resendOtpCodes(phoneNumber, oldOtpCodes);
     }
 }
