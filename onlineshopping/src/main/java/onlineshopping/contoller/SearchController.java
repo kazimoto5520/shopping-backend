@@ -46,7 +46,7 @@ public class SearchController {
                         .itemName(queryItem.getItemName())
                         .actualPrice(queryItem.getActualPrice())
                         .discountPrice(queryItem.getDiscountPrice())
-                        .quantity(queryItem.getQuantity())
+                        .quantity(queryItem.getInitialQuantity())
                         .description(queryItem.getDescription())
                         .ratings(queryItem.getRatings())
                         .imageUrl(queryItem.getImageUrl())
