@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
         item.setItemNo(itemNo);
         item.setItemName(itemName);
         item.setActualPrice(actualPrice);
-        item.setQuantity(stokeQuantity);
+        item.setInitialQuantity(stokeQuantity);
         item.setDescription(description);
         item.setDiscountPrice(discountPrice);
         item.setImageUrl(storeImages(imageUrl));
@@ -136,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setOrder(order);
             orderItemRepo.save(orderItem);
 
-            item.setQuantity(item.getQuantity() - productQuantity);
+            item.setCurrentQuantity(item.getInitialQuantity() - productQuantity);
             itemRepo.save(item);
         } else {
             throw new HandleExceptions("Oops! invalid or not exist item number");

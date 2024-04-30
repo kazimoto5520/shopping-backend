@@ -40,7 +40,12 @@ public class Item {
     @Column(name = "discount")
     private float discountPrice;
 
-    private int quantity;
+    @Column(name = "initial_quantity")
+    private int initialQuantity;
+
+    @Column(name = "current_quantity")
+    private int currentQuantity;
+
     private String description;
     private int ratings;
 

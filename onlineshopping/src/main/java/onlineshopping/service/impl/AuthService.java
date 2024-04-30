@@ -53,14 +53,7 @@ public class AuthService implements BaseService {
             customer.setEmail(userDto.getEmail());
             customer.setMobile(userDto.getMobile());
             customer.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            if (userDto.getRole() != null && (userDto.getRole().equalsIgnoreCase("manufacturer") ||
-                            userDto.getRole().equalsIgnoreCase("sale"))) {
-                customer.setRole(UserRole.ENTREPRENEUR);
-            } else {
-                customer.setRole(UserRole.CUSTOMER);
-            }
-
- //todo: every request should embedded with jwt token
+            customer.setRole(UserRole.CUSTOMER);//default user will have customer role
             userRepo.save(customer);
 
             // otp
@@ -159,4 +152,3 @@ public class AuthService implements BaseService {
     }
 
 }
-//todo token response should include user id
