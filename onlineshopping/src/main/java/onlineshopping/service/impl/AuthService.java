@@ -106,7 +106,7 @@ public class AuthService implements BaseService {
             int digit = random.nextInt(10);
             builder.append(digit);
         }
-        return builder.toString();
+        return "S/N-"+builder;
     }
 
     @Override
