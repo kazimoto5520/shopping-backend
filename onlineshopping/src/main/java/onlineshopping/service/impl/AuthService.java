@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -61,8 +62,7 @@ public class AuthService implements BaseService {
             } else {
                 customer.setRole(UserRole.CUSTOMER);
             }
-
- //todo: every request should embedded with jwt token
+            customer.setEnrollNumber(generateUniqueNumber());
             userRepo.save(customer);
 
             // otp
@@ -95,6 +95,18 @@ public class AuthService implements BaseService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(error);
         }
+    }
+
+    private String generateUniqueNumber() {
+        int orderNumberLength = 5;
+        StringBuilder builder = new StringBuilder();
+
+        Random random = new Random();
+        for (int i=0; i < orderNumberLength; i++){
+            int digit = random.nextInt(10);
+            builder.append(digit);
+        }
+        return builder.toString();
     }
 
     @Override
