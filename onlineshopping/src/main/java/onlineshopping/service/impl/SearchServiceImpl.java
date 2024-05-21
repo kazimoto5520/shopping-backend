@@ -121,6 +121,15 @@ public class SearchServiceImpl implements SearchBaseService {
         }
     }
 
+    @Override
+    public Page<Object[]> findProducts(Pageable pageable) {
+        try {
+            return orderItemRepo.findProducts(pageable);
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException);
+        }
+    }
+
 
     public ResponseEntity<String> getImagePath(String imageName){
         Optional<String> image_path = itemRepo.findByImageUrl(imageName);

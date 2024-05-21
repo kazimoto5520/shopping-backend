@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -35,10 +36,10 @@ public class Item {
     private String itemNo;
 
     @Column(name = "price", nullable = false)
-    private float actualPrice;
+    private double actualPrice;
 
     @Column(name = "discount")
-    private float discountPrice;
+    private double discountPrice;
 
     @Column(name = "initial_quantity")
     private int initialQuantity;
@@ -61,4 +62,12 @@ public class Item {
     @CollectionTable(name = "item_colors", joinColumns = @JoinColumn(name = "item_id"))
     @Column(name = "color")
     private List<String> colors;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime datePublished;
+
+    @PrePersist
+    public void onCreate(){
+        datePublished = LocalDateTime.now().withNano(0);;
+    }
 }

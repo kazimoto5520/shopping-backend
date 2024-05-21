@@ -115,7 +115,30 @@ public class AdminController {
         int totalProduct = searchService.findTotalProduct();
         return ResponseEntity.ok(totalProduct);
     }
+
+    @GetMapping("/product")
+    public ResponseEntity<PageResponse<Object[]>> findProducts(
+            @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
+    ){
+        try {
+            if (pageNumber < 0 || pageSize <= 0){
+                throw new HandleExceptions("Invalid page number or size");
+            }
+
+            Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(""));
+            Page<Object[]> products = searchService.findProducts(pageable);
+
+            PageResponse<Object[]> pageResponse = new PageResponse<>(
+                    products.getContent(),
+                    products.getTotalPages(),
+                    products.getNumberOfElements()
+            );
+            return ResponseEntity.ok(pageResponse);
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException.getMessage());
+        }
+    }
 }
 //payment details: customer name, payment schedule, Bill number, Amount paid, balance amount, date
-//product: name, amounts, date requested, date admitted. Add new product
 //sales for month

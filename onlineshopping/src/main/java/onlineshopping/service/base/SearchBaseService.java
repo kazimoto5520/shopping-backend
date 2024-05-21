@@ -26,4 +26,6 @@ public interface SearchBaseService {
     int findTotalOrders();
 
     int findTotalProduct();
+
+    Page<Object[]> findProducts(Pageable pageable);
 }

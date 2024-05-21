@@ -10,8 +10,8 @@ import java.util.List;
 public class ItemResponse {
     private String itemName;
     private String itemNo;
-    private float actualPrice;
-    private float discountPrice;
+    private double actualPrice;
+    private double discountPrice;
     private int quantity;
     private String description;
     private int ratings;
