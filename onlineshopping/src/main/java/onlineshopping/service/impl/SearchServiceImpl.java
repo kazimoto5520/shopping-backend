@@ -2,10 +2,13 @@ package onlineshopping.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import onlineshopping.entity.Item;
+import onlineshopping.exc.DatabaseAccessException;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.repo.*;
 import onlineshopping.service.base.SearchBaseService;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,10 @@ import java.util.stream.Collectors;
 public class SearchServiceImpl implements SearchBaseService {
 
     private final ItemRepo itemRepo;
+    private final UserRepo userRepo;
+    private final OrderRepo orderRepo;
+    private final OrderItemRepo orderItemRepo;
+    private final OrderStatusRepo statusRepo;
 
     @Override
     public List<String> findItemNames(String queryStr) {
@@ -59,6 +66,61 @@ public class SearchServiceImpl implements SearchBaseService {
             throw new HandleExceptions("No item found matching your search query.");
         }
     }
+
+    @Override
+    public Page<Object[]> findAllUsers(Pageable pageable) {
+        try {
+            return userRepo.findAllUsers(pageable);
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException.getMessage());
+        }
+    }
+
+    @Override
+    public Page<Object[]> findOrders(Pageable pageable) {
+        try {
+            return orderRepo.findOrders(pageable);
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException.getMessage());
+        }
+    }
+
+    @Override
+    public Page<Object[]> findLatestOrders(Pageable pageable) {
+        try {
+            return orderRepo.findLatestOrders(pageable);
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException.getMessage());
+        }
+    }
+
+    @Override
+    public int findTotalSales() {
+        try {
+           return orderRepo.findTotalSales();
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException.getMessage());
+        }
+    }
+
+    @Override
+    public int findTotalOrders() {
+        try {
+            return orderRepo.findTotalOrders();
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException.getMessage());
+        }
+    }
+
+    @Override
+    public int findTotalProduct() {
+        try {
+            return orderItemRepo.findTotalProduct();
+        }catch (DataAccessException accessException){
+            throw new DatabaseAccessException("Error: "+accessException.getMessage());
+        }
+    }
+
 
     public ResponseEntity<String> getImagePath(String imageName){
         Optional<String> image_path = itemRepo.findByImageUrl(imageName);

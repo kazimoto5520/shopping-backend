@@ -9,6 +9,7 @@ import onlineshopping.pay.entity.Invoice;
 import onlineshopping.pay.entity.Transaction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -53,18 +54,22 @@ public class Order {
     @Column(name = "billing_address",nullable = false)
     private String address;
 
-    private LocalDate date_created;
+    private double totalPrice;
 
-    private LocalDate date_updated;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime date_created;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime date_updated;
 
     @PrePersist
     public void onCreate(){
-        date_created = LocalDate.now();
+        date_created = LocalDateTime.now().withNano(0);;
     }
 
     @PreUpdate
     public void onUpdate(){
-        date_updated = LocalDate.now();
+        date_updated = LocalDateTime.now().withNano(0);;
     }
 
 }

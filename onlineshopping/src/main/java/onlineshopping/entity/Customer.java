@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -44,14 +45,15 @@ public class Customer implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    private LocalDate date_created;// when an account created
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime date_created;// when an account created
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "customer",fetch = FetchType.EAGER)
     private List<Order> orders;
 
     @PrePersist
     public void onCreate(){
-        date_created = LocalDate.now();
+        date_created = LocalDateTime.now().withNano(0);;
     }
 
     @Override

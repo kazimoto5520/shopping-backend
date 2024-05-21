@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order_status")
@@ -33,18 +34,20 @@ public class OrderStatus {
 
     private String order_status;
 
-    private LocalDate date_created;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime date_created;
 
-    private LocalDate date_updated;// date for its status to change
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime date_updated;// date for its status to change
 
     @PrePersist
     public void onCreate(){
-        date_created = LocalDate.now();
+        date_created = LocalDateTime.now().withNano(0);;
     }
 
     @PreUpdate
     public void onUpdate(){
-        date_updated = LocalDate.now();
+        date_updated = LocalDateTime.now().withNano(0);;
     }
 
 }
