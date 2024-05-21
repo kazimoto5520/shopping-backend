@@ -24,7 +24,7 @@ public class SecurityConfig {
                 disable()
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/api/v1/base/**","/api/v1/search/**","/images/{imageName}")
+                                .requestMatchers("/api/v1/base/**","/api/v1/search/**","/images/{imageName}"/*,"/admin/**"*/)
                                 .permitAll()
                                 .requestMatchers("/api/v1/search/item-options","/api/v1/search/items","/api/v1/search/item-product")
                                 .permitAll()
@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers("/api/v1/user/cart/checkout","/payments/**")
                                 .permitAll()
-                                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/admin/**").permitAll()/*.hasRole("ADMIN")*/
                                 .requestMatchers("/api/v1/entrepreneur").hasAnyRole("ENTREPRENEUR","ADMIN")
                                 .anyRequest()
                                 .authenticated()
