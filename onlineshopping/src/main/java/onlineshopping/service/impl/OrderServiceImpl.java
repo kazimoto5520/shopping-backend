@@ -43,14 +43,13 @@ public class OrderServiceImpl implements OrderService {
                 throw new HandleExceptions("Oops! you need to have an account");
             }
             Item items = itemRepo.findByItemNo(item.getItemNo());
-            if (items == null) {
-                throw new HandleExceptions("Oops! Can't find that item");
-            }
+            double totalPrice = getTotalPrice(item, items);
 
             Order order = new Order();
             order.setOrderNo(generateRandomOrderNumber());
             order.setAddress(street + " " + region);
             order.setCustomer(customer);
+            order.setTotalPrice(totalPrice);
             orderRepo.save(order);
 
             OrderStatus orderStatus = new OrderStatus();
@@ -66,6 +65,22 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    private static double getTotalPrice(CartItem item, Item items) {
+        if (items == null) {
+            throw new HandleExceptions("Oops! Can't find that item");
+        }
+
+        double actualPrice = items.getActualPrice();
+        double discountPrice = items.getDiscountPrice();
+        double itemPrice = 0;
+        if (discountPrice > 0){
+            itemPrice = actualPrice - discountPrice;
+        }else if (discountPrice == 0){
+            itemPrice = actualPrice;
+        }
+        return itemPrice * item.getProductQuantity();
     }
 
     @Override
