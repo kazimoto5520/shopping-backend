@@ -13,7 +13,7 @@ import onlineshopping.model.AuthRequest;
 import onlineshopping.model.AuthResponse;
 import onlineshopping.model.UserDto;
 import onlineshopping.notification.model.LoginRequest;
-import onlineshopping.notification.service.OtpService;
+import onlineshopping.notification.service.BeemOtpService;
 import onlineshopping.repo.OtpCodeRepo;
 import onlineshopping.repo.UserRepo;
 import onlineshopping.service.base.BaseService;
@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +37,8 @@ public class AuthService implements BaseService {
     private final JwtService jwtService;
     private  final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final OtpService otpService;
     private final OtpCodeRepo otpCodeRepo;
+    private final BeemOtpService beemOtpService;
 
     private static final long OTP_EXPIRATION_MINUTES = 5;
 
@@ -66,14 +65,14 @@ public class AuthService implements BaseService {
             userRepo.save(customer);
 
             // otp
-            String otpCode = otpService.generateOtp();
+            String otpCode = beemOtpService.generateOtp();
             log.info("Generated OTP code for mobile {}: {}", userDto.getMobile(), otpCode);
-            /*otpService.sendOtp(userDto.getMobile(), otpCode);*/
+            beemOtpService.sendOtp(userDto.getMobile(), otpCode);
 
             //storing otp
             Otp otp = Otp.builder()
                     .otpCode(otpCode)
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(LocalDateTime.now().withNano(0))
                     .customer(customer)
                     .build();
             otpCodeRepo.save(otp);
@@ -186,9 +185,9 @@ public class AuthService implements BaseService {
             }
 
             // otp
-            String otpCode = otpService.generateOtp();
+            String otpCode = beemOtpService.generateOtp();
             log.info("Generated OTP code for mobile {}: {}", phoneNumber, otpCode);
-            /*otpService.sendOtp(userDto.getMobile(), otpCode);*/
+            beemOtpService.sendOtp(phoneNumber, otpCode);
 
             String hashedOtpCodes = passwordEncoder.encode(otpCode);
 
