@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import onlineshopping.exc.DatabaseAccessException;
 import onlineshopping.exc.HandleExceptions;
 import onlineshopping.model.PageResponse;
+import onlineshopping.model.SalesPerMonthDTO;
 import onlineshopping.service.impl.SearchServiceImpl;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/admin")
@@ -138,6 +141,12 @@ public class AdminController {
         }catch (DataAccessException accessException){
             throw new DatabaseAccessException("Error: "+accessException.getMessage());
         }
+    }
+
+    @GetMapping("/sales-per-month")
+    public ResponseEntity<List<SalesPerMonthDTO>> findSalesPerMonth() {
+        List<SalesPerMonthDTO> salesPerMonthList = searchService.getSalesPerMonth();
+        return ResponseEntity.ok(salesPerMonthList);
     }
 }
 //payment details: customer name, payment schedule, Bill number, Amount paid, balance amount, date

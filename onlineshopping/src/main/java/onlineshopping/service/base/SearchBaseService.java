@@ -1,6 +1,7 @@
 package onlineshopping.service.base;
 
 import onlineshopping.entity.Item;
+import onlineshopping.model.SalesPerMonthDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -28,4 +29,6 @@ public interface SearchBaseService {
     int findTotalProduct();
 
     Page<Object[]> findProducts(Pageable pageable);
+
+    List<SalesPerMonthDTO> getSalesPerMonth();
 }

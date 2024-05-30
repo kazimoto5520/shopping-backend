@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import onlineshopping.entity.Item;
 import onlineshopping.exc.DatabaseAccessException;
 import onlineshopping.exc.HandleExceptions;
+import onlineshopping.model.SalesPerMonthDTO;
 import onlineshopping.repo.*;
 import onlineshopping.service.base.SearchBaseService;
 import org.springframework.dao.DataAccessException;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -27,6 +29,7 @@ public class SearchServiceImpl implements SearchBaseService {
     private final UserRepo userRepo;
     private final OrderRepo orderRepo;
     private final OrderItemRepo orderItemRepo;
+    private final TransactionRepo transactionRepo;
     private final OrderStatusRepo statusRepo;
 
     @Override
@@ -128,6 +131,20 @@ public class SearchServiceImpl implements SearchBaseService {
         }catch (DataAccessException accessException){
             throw new DatabaseAccessException("Error: "+accessException);
         }
+    }
+
+    @Override
+    public List<SalesPerMonthDTO> getSalesPerMonth() {
+            List<Object[]> results = transactionRepo.findSalesPerMonth();
+            List<SalesPerMonthDTO> salesPerMonthList = new ArrayList<>();
+
+            for (Object[] result : results) {
+                String month = (String) result[0];
+                double totalSales = (Double) result[1];
+                salesPerMonthList.add(new SalesPerMonthDTO(month, totalSales));
+            }
+
+            return salesPerMonthList;
     }
 
 
