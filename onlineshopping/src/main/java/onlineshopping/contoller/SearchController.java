@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/api/v1/search")
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class SearchController {
     private final SearchServiceImpl searchService;
 
     // auto-completion drop-down by passing query parameter
+    @CrossOrigin
     @GetMapping("/item-options")
     public ResponseEntity<List<String>> itemProducts(@RequestParam String queryStr){
         List<String> itemOptions = searchService.findItemNames(queryStr);
@@ -30,6 +32,7 @@ public class SearchController {
 
 
     // querying all items without passing any parameter, just automatically after the system loaded
+    @CrossOrigin
     @GetMapping("/items")
     public ResponseEntity<List<Item>> findAllItems(){
         List<Item> items = searchService.findFoundItems();
@@ -37,6 +40,7 @@ public class SearchController {
     }
 
     //querying specific item, with passed item number as a parameter
+    @CrossOrigin
     @GetMapping("/item-product")
     public ResponseEntity<ItemResponse> findItem(@RequestParam String queryStr){
         Item queryItem = searchService.findUniqueItem(queryStr);
@@ -60,6 +64,7 @@ public class SearchController {
     }
 
     //querying image by passing image name
+    @CrossOrigin
     @GetMapping("/image/{imageName}")
     public ResponseEntity<String> getImage(@PathVariable String imageName){
         return searchService.getImagePath(imageName);

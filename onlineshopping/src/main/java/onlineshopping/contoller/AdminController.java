@@ -12,13 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/admin")
 @RequiredArgsConstructor
@@ -26,6 +24,7 @@ public class AdminController {
 
     private final SearchServiceImpl searchService;
 
+    @CrossOrigin
     @GetMapping("/all-users")
     public ResponseEntity<PageResponse<Object[]>> findAllUsers(
             @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
@@ -51,6 +50,7 @@ public class AdminController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/all-orders")
     public ResponseEntity<PageResponse<Object[]>> findOrders(
             @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
@@ -76,6 +76,7 @@ public class AdminController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/latest-orders")
     public ResponseEntity<PageResponse<Object[]>> findLatestOrders(
             @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
@@ -101,24 +102,28 @@ public class AdminController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/total-sales")
     public ResponseEntity<Integer> findTotalSales() {
         int totalSales = searchService.findTotalSales();
         return ResponseEntity.ok(totalSales);
     }
 
+    @CrossOrigin
     @GetMapping("/total-orders")
     public ResponseEntity<Integer> findTotalOrders(){
         int totalOrders = searchService.findTotalOrders();
         return ResponseEntity.ok(totalOrders);
     }
 
+    @CrossOrigin
     @GetMapping("/total-ordered-products")
     public ResponseEntity<Integer> findTotalProduct(){
         int totalProduct = searchService.findTotalProduct();
         return ResponseEntity.ok(totalProduct);
     }
 
+    @CrossOrigin
     @GetMapping("/product")
     public ResponseEntity<PageResponse<Object[]>> findProducts(
             @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
@@ -143,6 +148,7 @@ public class AdminController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/sales-per-month")
     public ResponseEntity<List<SalesPerMonthDTO>> findSalesPerMonth() {
         List<SalesPerMonthDTO> salesPerMonthList = searchService.getSalesPerMonth();
