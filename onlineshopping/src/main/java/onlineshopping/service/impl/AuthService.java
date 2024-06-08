@@ -96,7 +96,7 @@ public class AuthService implements BaseService {
         }
     }
 
-    private String generateUniqueNumber() {
+    public static String generateUniqueNumber() {
         int orderNumberLength = 5;
         StringBuilder builder = new StringBuilder();
 
