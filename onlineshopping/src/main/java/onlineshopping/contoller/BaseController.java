@@ -9,7 +9,7 @@ import onlineshopping.service.impl.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+@CrossOrigin()
 @RestController
 @RequestMapping(path = "/api/v1/base")
 @RequiredArgsConstructor
@@ -18,7 +18,7 @@ public class BaseController {
     private final AuthService baseService;
 
 
-    @CrossOrigin
+    @CrossOrigin()
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> registerUser(
             @RequestBody UserDto userDto
@@ -26,7 +26,7 @@ public class BaseController {
         return baseService.createAccount(userDto);
     }
 
-    @CrossOrigin
+    @CrossOrigin()
     @PostMapping("/verifyOtpCode")
     public ResponseEntity<AuthResponse> verifyOtpCodeAndLogin(
             @RequestBody LoginRequest loginRequest
@@ -34,7 +34,7 @@ public class BaseController {
         return baseService.verifyOtp(loginRequest);
     }
 
-    @CrossOrigin
+    @CrossOrigin()
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(
             @RequestBody AuthRequest request)
@@ -42,7 +42,7 @@ public class BaseController {
         return baseService.authenticate(request);
     }
 
-    @CrossOrigin
+    @CrossOrigin()
     @PostMapping("/resendOtpCodes")
     public ResponseEntity<AuthResponse> resendOtpCodes(
             @RequestParam String phoneNumber,

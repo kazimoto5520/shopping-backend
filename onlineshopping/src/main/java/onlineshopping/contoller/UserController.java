@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 
-@CrossOrigin
+@CrossOrigin()
 @RestController
 @RequestMapping(path = "/api/v1/user")
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class UserController {
     private final OrderServiceImpl userService;
     private final PaymentFacade paymentFacade;
 
-    @CrossOrigin
+    @CrossOrigin()
     @PostMapping("/cart/checkout")
     public ResponseEntity<OrderResponse> placeOrder(
             @RequestBody OrderRequest orderRequest
@@ -58,7 +58,7 @@ public class UserController {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin()
     @PostMapping("/publish-product")
     public ResponseEntity<String> publishItem(
             @RequestParam(name = "itemName", required = false) String itemName,
@@ -76,7 +76,7 @@ public class UserController {
         );
     }
 
-    @CrossOrigin
+    @CrossOrigin()
     @PostMapping("/payments")
     public ResponseEntity<PaymentResponse> makePayment(@RequestBody PaymentRequest paymentRequest)
     {
