@@ -1,0 +1,15 @@
+services:
+  shopping:
+    container_name: shoppingcontainer
+    image: shopping
+    restart: unless-stopped
+    ports:
+      - 8081:8080
+    networks:
+      - network
+    environment:
+      - TZ=Africa/Dar_es_Salaam
+
+networks:
+  network:
+    driver: bridge
